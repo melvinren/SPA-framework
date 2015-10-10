@@ -25,7 +25,7 @@ define(['pageView', 'UIBase'],
         */
         if(this.onTopPull){
           //TODO
-          _.flip(this.$el., 'down', function(){
+          _.flip(this.$el, 'down', function(){
             var pos = UIBase.getPageScrollPos();
             if(pos.top <= 10 && !view.__isLoading__){
               view.__isLoading__ = true;
