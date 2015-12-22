@@ -1,5 +1,5 @@
-define(['loading','UIHeader','UIWarning404','UIAlert','UIToast', 'UIAnimation', 'cAjax'],
-function(Loading, Header, Warning404, Alert, Toast, animation, cAjax){
+define(['loading','UIHeader','UIWarning404','UIAlert','UIToast', 'UIAnimation'],
+function(Loading, Header, Warning404, Alert, Toast, animation){
   function APP(options){
     this.initialize(options);
   }
@@ -27,6 +27,7 @@ function(Loading, Header, Warning404, Alert, Toast, animation, cAjax){
       this.options = opts;
       this.firstState = null;
       this.mainRoot = $(opts.mainRoot);
+      this.viewport = this.mainRoot.find(opts.viewport);
       this.header = $(opts.header);
       this.curView = null;
       this.lastView = null;
@@ -155,40 +156,20 @@ function(Loading, Header, Warning404, Alert, Toast, animation, cAjax){
 
     },
     loadView: function(url, options){
-      //请求页面， 返回页面内容
-      //{html:html, controller:controller, error: error}
-      var renderObj = requesturl(url);
-      cAjax.get(url, function (html) {
-        //解析html
-        var pageDocNode = $('<DIV>' + html + '</DIV>');
-        var viewcontent = pageDocNode.find('#maincontent');
-        var viewcontroller = viewcontent.attr('data-controller');
-        var error = viewcontent.find('#errorcontainer');
-
-        //TODO 显示内容
-        renderContent(content);
-        //TODO switch view
-
+        var el = this.viewport.children().first();
+        var controller = el.attr('data-controller');
         //实例化view
-        require([renderObj.controller || 'cPageView'], _.bind(function(View){
+        require([controller || 'cPageView'], _.bind(function(View){
           this.animatName = options.animatName || (this.navigationType == 'back' ? this.animBackwordName : this.animForwardName);
           if(this.curView){
             this.lastView = this.curView;
           }
-
-          this.curView = new View(el:{});
+          this.curView = new View({el: el});
           this.curView.$el.attr('page-url', url);
-
         }, this));
-      }
     },
     showView: function(data){
       this.loadView(data.url, data.options)
-    },
-    _requesturl:function(url, opt){
-      cAjax.get(url, opt ? opt.data : {}, function (html) {
-       self._loadViewByOptions(url, html, opt);
-     }
     },
     goTo: function(url, opt){},
     goBack: function(url, opt){},

@@ -1,5 +1,5 @@
-define(['cUtilCommon', 'cCoreInherit', 'cAbstractApp','cUtilPath'],
-  function(UtilCommon, cCoreInherit, APP, Path){
+define(['cUtilCommon', 'cCoreInherit', 'cAbstractApp','cUtilPath', 'cAjax'],
+  function(UtilCommon, cCoreInherit, APP, Path, cAjax){
 
   return cCoreInherit.calss(APP,{
     bindEvents: function($super){
@@ -62,8 +62,25 @@ define(['cUtilCommon', 'cCoreInherit', 'cAbstractApp','cUtilPath'],
           url = url.substr(url.indexOf('/html5'));
         }
       }
+      //请求页面， 返回页面内容
+      //{html:html, controller:controller, error: error}
+      cAjax.get(url, function (html) {
+        //解析html
+        var pageDocNode = $('<DIV>' + html + '</DIV>');
+        var viewcontent = pageDocNode.find('.main-viewport').children().first();
+        var viewcontroller = viewcontent.attr('data-controller');
+        var error = viewcontent.find('#errorcontainer');
+        if(!error){
+          this.viewport.children().remove();
+          var newview = document.createElement('div');
+          newview.id='client_id_viewport_'+new Date().getTime();
+          newview.attr('data-controller', viewcontroller);
+          newview.append(viewcontent);
+          this.viewport.append(newview);
 
-      this._loadViewByOptions(url, opt);
+          this._loadViewByOptions(url, opt);
+        }
+      }
     },
 
     _loadViewByOptions: function(url, opt){
