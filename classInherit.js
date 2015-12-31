@@ -21,7 +21,7 @@ define([],function(){
     }
 
     klass.superclass = parent;
-    kclass.subclass = [];
+    klass.subclass = [];
 
     var sup__properties__ = function(){};
     var sub__properties__ = properties.__properties__ || function(){};
@@ -95,4 +95,6 @@ define([],function(){
 
     return source;
   }
+
+  return Core;
 });

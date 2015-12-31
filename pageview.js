@@ -19,7 +19,7 @@ define(['UIHeader'],function(Header){
     /*
     * 页面切换时， 是否要滚动至顶部
     */
-    scrollZero： true,
+    scrollZero:true,
     /*
     * 页面切换时， 是否执行onshow
     */
@@ -40,7 +40,7 @@ define(['UIHeader'],function(Header){
     */
     _createHeader:function(){
       var hDom = $("#headerview");
-      this.header = this.headerview = new Header({'root', hDom, 'wrapper': hDom});
+      this.header = this.headerview = new Header({'root': hDom, 'wrapper': hDom});
     },
     /*
     * create 方法， view首次初始化调用
@@ -94,7 +94,7 @@ define(['UIHeader'],function(Header){
       if(this.addScrollListener){
         this.addScrollListener();
       }
-    }，
+    },
     /*
     * View 隐藏
     */

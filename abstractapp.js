@@ -1,20 +1,20 @@
-define(['loading','UIHeader','UIWarning404','UIAlert','UIToast', 'UIAnimation'],
-function(Loading, Header, Warning404, Alert, Toast, animation){
+define(['loading','UIWarning404','UIAlert','UIToast', 'UIAnimation'],
+function(Loading, Warning404, Alert, Toast, animation){
   function APP(options){
     this.initialize(options);
   }
 
   APP.subclasses = [];
 
-  APP.defaults = [
-    "mainRoot"        : "#main",
-    "header"          : "header",
+  APP.defaults = {
+    "mainRoot"        : "main",
+    "header"          : "headerview",
     "viewport"        : ".main-viewport",
     "animForwardName" : "slideleft",
     "animBackwordName": "slideright",
     "isAnim"          : false,
     "maxsize"         : 10
-  ];
+  };
 
   APP.prototype = {
     viewReady: function(handler){
@@ -26,9 +26,9 @@ function(Loading, Header, Warning404, Alert, Toast, animation){
       var opts = this.initProperty(options);
       this.options = opts;
       this.firstState = null;
-      this.mainRoot = $(opts.mainRoot);
-      this.viewport = this.mainRoot.find(opts.viewport);
-      this.header = $(opts.header);
+      this.mainRoot = document.getElementById(opts.mainRoot);
+      this.viewport = this.mainRoot.querySelector(opts.viewport);
+      this.header = document.getElementById(opts.header);
       this.curView = null;
       this.lastView = null;
       this.maxsize = opts.maxsize;
@@ -42,6 +42,10 @@ function(Loading, Header, Warning404, Alert, Toast, animation){
       this._confirm = new Alert();
       this._toast = new Toast();
       this._warning404 = new Warning404();
+
+      this.bindEvents();
+      this.views = {};
+      this.start();
     },
 
     /*
@@ -148,24 +152,24 @@ function(Loading, Header, Warning404, Alert, Toast, animation){
       return opts;
     },
     bindEvents: function(){
-      if($.bindFastClick){
+      /*if($.bindFastClick){
         $.bindFastClick();
-      }
+      }*/
     },
     start:function(){
 
     },
     loadView: function(url, options){
-        var el = this.viewport.children().first();
-        var controller = el.attr('data-controller');
+        var el = this.viewport.children[0];
+        var controller = el.getAttribute('data-controller');
         //实例化view
-        require([controller || 'cPageView'], _.bind(function(View){
+        require([controller || 'pageView'], _.bind(function(View){
           this.animatName = options.animatName || (this.navigationType == 'back' ? this.animBackwordName : this.animForwardName);
           if(this.curView){
             this.lastView = this.curView;
           }
           this.curView = new View({el: el});
-          this.curView.$el.attr('page-url', url);
+          this.curView.$el.setAttribute('page-url', url);
         }, this));
     },
     showView: function(data){
