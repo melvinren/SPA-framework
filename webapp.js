@@ -1,10 +1,11 @@
 define(['cUtilCommon', 'cCoreInherit', 'cAbstractApp','cUtilPath', 'cAjax'],
   function(UtilCommon, cCoreInherit, APP, Path, cAjax){
 
-  return cCoreInherit.calss(APP,{
+  return cCoreInherit.Class(APP,{
     bindEvents: function($super){
       $super();
-      $(window).bind('popstate', _.bind(function(e){
+      var that = this;
+      window.addEventListener('popstate', _.bind(function(e){
         var data = e.state;
 
         history.replaceState({url: data.url, text:data.text, options: data.options}, document.title, data.url);
@@ -12,7 +13,7 @@ define(['cUtilCommon', 'cCoreInherit', 'cAbstractApp','cUtilPath', 'cAjax'],
         data.options = data.options || {};
         data.options.animatName = this.animBackwordName;
         this.showView(data);
-      }, this));
+      }, that));
     },
 
     start: function(){
@@ -80,7 +81,7 @@ define(['cUtilCommon', 'cCoreInherit', 'cAbstractApp','cUtilPath', 'cAjax'],
 
           this._loadViewByOptions(url, opt);
         }
-      }
+      });
     },
 
     _loadViewByOptions: function(url, opt){
